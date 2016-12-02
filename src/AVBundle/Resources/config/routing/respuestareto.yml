@@ -1,0 +1,30 @@
+respuestareto:
+    path:     /
+    defaults: { _controller: "AVBundle:RespuestaReto:index" }
+
+respuestareto_show:
+    path:     /{id}/show
+    defaults: { _controller: "AVBundle:RespuestaReto:show" }
+
+respuestareto_new:
+    path:     /new
+    defaults: { _controller: "AVBundle:RespuestaReto:new" }
+
+respuestareto_create:
+    path:     /create
+    defaults: { _controller: "AVBundle:RespuestaReto:create" }
+    methods:  POST
+
+respuestareto_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "AVBundle:RespuestaReto:edit" }
+
+respuestareto_update:
+    path:     /{id}/update
+    defaults: { _controller: "AVBundle:RespuestaReto:update" }
+    methods:  [POST, PUT]
+
+respuestareto_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "AVBundle:RespuestaReto:delete" }
+    methods:  [POST, DELETE]

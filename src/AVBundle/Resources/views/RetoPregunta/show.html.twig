@@ -1,0 +1,44 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>RetoPregunta</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Pregunta</th>
+                <td>{{ entity.pregunta }}</td>
+            </tr>
+            <tr>
+                <th>Respuesta</th>
+                <td>{{ entity.respuesta }}</td>
+            </tr>
+            <tr>
+                <th>Tipo</th>
+                <td>{{ entity.tipo }}</td>
+            </tr>
+            <tr>
+                <th>Matclasificacion</th>
+                <td>{{ entity.matClasificacion }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('retopregunta') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('retopregunta_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

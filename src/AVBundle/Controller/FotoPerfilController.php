@@ -1,0 +1,225 @@
+<?php
+
+namespace AVBundle\Controller;
+
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
+use AVBundle\Entity\FotoPerfil;
+use AVBundle\Form\FotoPerfilType;
+
+/**
+ * FotoPerfil controller.
+ *
+ */
+class FotoPerfilController extends Controller
+{
+
+    /**
+     * Lists all FotoPerfil entities.
+     *
+     */
+    public function indexAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entities = $em->getRepository('AVBundle:FotoPerfil')->findAll();
+
+      
+        return $this->render('AVBundle:FotoPerfil:index.html.twig', array(
+            'entities' => $entities,
+        ));
+    }
+    /**
+     * Creates a new FotoPerfil entity.
+     *
+     */
+    public function createAction(Request $request)
+    {
+        $entity = new FotoPerfil();
+        $form = $this->createCreateForm($entity);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($entity);
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('fotoperfil_show', array('id' => $entity->getId())));
+        }
+
+        return $this->render('AVBundle:FotoPerfil:new.html.twig', array(
+            'entity' => $entity,
+            'form'   => $form->createView(),
+        ));
+    }
+
+    /**
+     * Creates a form to create a FotoPerfil entity.
+     *
+     * @param FotoPerfil $entity The entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createCreateForm(FotoPerfil $entity)
+    {
+        $form = $this->createForm(new FotoPerfilType(), $entity, array(
+            'action' => $this->generateUrl('fotoperfil_create'),
+            'method' => 'POST',
+        ));
+
+        $form->add('submit', 'submit', array('label' => 'Create'));
+
+        return $form;
+    }
+
+    /**
+     * Displays a form to create a new FotoPerfil entity.
+     *
+     */
+    public function newAction()
+    {
+        $entity = new FotoPerfil();
+        $form   = $this->createCreateForm($entity);
+
+        return $this->render('AVBundle:FotoPerfil:new.html.twig', array(
+            'entity' => $entity,
+            'form'   => $form->createView(),
+        ));
+    }
+
+    /**
+     * Finds and displays a FotoPerfil entity.
+     *
+     */
+    public function showAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('AVBundle:FotoPerfil')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find FotoPerfil entity.');
+        }
+
+        $deleteForm = $this->createDeleteForm($id);
+
+        return $this->render('AVBundle:FotoPerfil:show.html.twig', array(
+            'entity'      => $entity,
+            'delete_form' => $deleteForm->createView(),
+        ));
+    }
+
+    /**
+     * Displays a form to edit an existing FotoPerfil entity.
+     *
+     */
+    public function editAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('AVBundle:FotoPerfil')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find FotoPerfil entity.');
+        }
+
+        $editForm = $this->createEditForm($entity);
+        $deleteForm = $this->createDeleteForm($id);
+
+        return $this->render('AVBundle:FotoPerfil:edit.html.twig', array(
+            'entity'      => $entity,
+            'edit_form'   => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ));
+    }
+
+    /**
+    * Creates a form to edit a FotoPerfil entity.
+    *
+    * @param FotoPerfil $entity The entity
+    *
+    * @return \Symfony\Component\Form\Form The form
+    */
+    private function createEditForm(FotoPerfil $entity)
+    {
+        $form = $this->createForm(new FotoPerfilType(), $entity, array(
+            'action' => $this->generateUrl('fotoperfil_update', array('id' => $entity->getId())),
+            'method' => 'PUT',
+        ));
+
+        $form->add('submit', 'submit', array('label' => 'Update'));
+
+        return $form;
+    }
+    /**
+     * Edits an existing FotoPerfil entity.
+     *
+     */
+    public function updateAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('AVBundle:FotoPerfil')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find FotoPerfil entity.');
+        }
+
+        $deleteForm = $this->createDeleteForm($id);
+        $editForm = $this->createEditForm($entity);
+        $editForm->handleRequest($request);
+
+        if ($editForm->isValid()) {
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('fotoperfil_edit', array('id' => $id)));
+        }
+
+        return $this->render('AVBundle:FotoPerfil:edit.html.twig', array(
+            'entity'      => $entity,
+            'edit_form'   => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ));
+    }
+    /**
+     * Deletes a FotoPerfil entity.
+     *
+     */
+    public function deleteAction(Request $request, $id)
+    {
+        $form = $this->createDeleteForm($id);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $entity = $em->getRepository('AVBundle:FotoPerfil')->find($id);
+
+            if (!$entity) {
+                throw $this->createNotFoundException('Unable to find FotoPerfil entity.');
+            }
+
+            $em->remove($entity);
+            $em->flush();
+        }
+
+        return $this->redirect($this->generateUrl('fotoperfil'));
+    }
+
+    /**
+     * Creates a form to delete a FotoPerfil entity by id.
+     *
+     * @param mixed $id The entity id
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createDeleteForm($id)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('fotoperfil_delete', array('id' => $id)))
+            ->setMethod('DELETE')
+            ->add('submit', 'submit', array('label' => 'Delete'))
+            ->getForm()
+        ;
+    }
+}

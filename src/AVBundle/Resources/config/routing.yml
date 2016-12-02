@@ -1,0 +1,35 @@
+av_respuestareto:
+    resource: "@AVBundle/Resources/config/routing/respuestareto.yml"
+    prefix:   /respuestareto
+
+av_retopregunta:
+    resource: "@AVBundle/Resources/config/routing/retopregunta.yml"
+    prefix:   /retopregunta
+
+av_reto:
+    resource: "@AVBundle/Resources/config/routing/reto.yml"
+    prefix:   /reto
+
+av_fotoperfil:
+    resource: "@AVBundle/Resources/config/routing/fotoperfil.yml"
+    prefix:   /fotoperfil
+
+av_grupoestudiante:
+    resource: "@AVBundle/Resources/config/routing/grupoestudiante.yml"
+    prefix:   /grupoestudiante
+
+av_materia:
+    resource: "@AVBundle/Resources/config/routing/materia.yml"
+    prefix:   /materia
+
+av_grupo:
+    resource: "@AVBundle/Resources/config/routing/grupo.yml"
+    prefix:   /grupo
+
+av_usuario:
+    resource: "@AVBundle/Resources/config/routing/usuario.yml"
+    prefix:   /usuario
+_enviar:
+    path:     /enviarEmail
+    defaults: { _controller: AVBundle:EnvioEmailController:Enviar }
+    methods: POST

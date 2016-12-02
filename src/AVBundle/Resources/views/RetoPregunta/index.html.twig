@@ -1,0 +1,47 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>RetoPregunta list</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Pregunta</th>
+                <th>Respuesta</th>
+                <th>Tipo</th>
+                <th>Matclasificacion</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('retopregunta_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.pregunta }}</td>
+                <td>{{ entity.respuesta }}</td>
+                <td>{{ entity.tipo }}</td>
+                <td>{{ entity.matClasificacion }}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('retopregunta_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('retopregunta_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('retopregunta_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}

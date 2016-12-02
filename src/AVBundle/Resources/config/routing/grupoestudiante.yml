@@ -1,0 +1,33 @@
+grupoestudiante:
+    path:     /
+    defaults: { _controller: "AVBundle:Grupoestudiante:index" }
+
+grupoestudiante_show:
+    path:     /{id}/show
+    defaults: { _controller: "AVBundle:Grupoestudiante:show" }
+
+grupoestudiante_new:
+    path:     /new
+    defaults: { _controller: "AVBundle:Grupoestudiante:new" }
+
+grupoestudiante_create:
+    path:     /create
+    defaults: { _controller: "AVBundle:Grupoestudiante:create" }
+    methods:  POST
+
+grupoestudiante_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "AVBundle:Grupoestudiante:edit" }
+
+grupoestudiante_update:
+    path:     /{id}/update
+    defaults: { _controller: "AVBundle:Grupoestudiante:update" }
+    methods:  [POST, PUT]
+
+grupoestudiante_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "AVBundle:Grupoestudiante:delete" }
+    methods:  [POST, DELETE]
+grupoestudiante_buscar:
+    path:     /{cedula}/buscar
+    defaults: { _controller: "AVBundle:Grupoestudiante:buscar" }

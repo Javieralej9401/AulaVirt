@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    <title>{% block title %} Bienvenido al Aula Virtual Facyt {% endblock %}</title>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    {% block stylesheets %}
+          <link rel="stylesheet" href="{{  asset('bundles/av/css/bootstrap-tagsinput.css')  }}">
+          <link rel="stylesheet" href="{{  asset('bundles/av/Admin/plugins/datatables/dataTables.bootstrap.css') }}">
+
+          {#  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css"> #}
+           
+        {% stylesheets
+        'bundles/av/Admin/bootstrap/css/bootstrap.min.css'
+        'bundles/av/Admin/plugins/font-awesome-4.3.0/css/font-awesome.min.css'
+        'bundles/av/Admin/plugins/ionicons-2.0.1/css/ionicons.min.css'
+        'bundles/av/Admin/dist/css/AdminLTE.min.css'
+        'bundles/av/Admin/dist/css/skins/skin-blue.min.css'
+
+        output='css/*.css' filter='cssrewrite' %}
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
+   
+
+        {% endstylesheets %}
+
+    {% endblock %}
+    {# <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" /> #}
+</head>
+<style>
+    .content-wrapper{
+        background-color:#E4E4E8;
+    }
+</style>
+<body class="skin-blue" >
+<div class="wrapper">
+    {% block body %}{% endblock %}
+</div>
+
+{% block javascripts %}
+
+    {% javascripts
+    'bundles/av/Admin/plugins/jQuery/jQuery-2.1.3.min.js'
+    'bundles/av/Admin/bootstrap/js/bootstrap.min.js'
+    'bundles/av/Admin/dist/js/app.min.js'
+   
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script src="{{  asset('bundles/av/Admin/plugins/datatables/jquery.dataTables.js') }}"></script>
+     <script src="{{  asset('bundles/av/Admin/plugins/datatables/dataTables.bootstrap.js') }}" ></script>
+    
+     <script src="{{  asset('bundles/av/js/parsley.min.js')  }}"></script>
+      <script src="{{  asset('bundles/av/js/bootstrap-tagsinput.min.js')  }}"> </script>
+        <script src="{{  asset('bundles/av/js/bootstrap3-typeahead.min.js')  }}"> </script>
+    <script type="text/javascript" src="{{ asset('bundles/av/js/basics.js') }}"></script>
+ <script type="text/javascript" src="{{ asset('bundles/av/js/livequery.js') }}"></script>
+{% endblock %}
+
+</body>
+</html>

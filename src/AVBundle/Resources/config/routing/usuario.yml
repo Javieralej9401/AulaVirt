@@ -1,0 +1,39 @@
+usuario:
+    path:     /
+    defaults: { _controller: "AVBundle:Usuario:index" }
+
+usuario_show:
+    path:     /{id}/show
+    defaults: { _controller: "AVBundle:Usuario:show" }
+
+usuario_new:
+    path:     /new
+    defaults: { _controller: "AVBundle:Usuario:new" }
+
+usuario_create:
+    path:     /create
+    defaults: { _controller: "AVBundle:Usuario:create" }
+    methods:  POST
+
+usuario_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "AVBundle:Usuario:edit" }
+
+usuario_update:
+    path:     /{id}/update
+    defaults: { _controller: "AVBundle:Usuario:update" }
+    methods:  [POST, PUT]
+
+usuario_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "AVBundle:Usuario:delete" }
+    methods:  [POST, DELETE]
+usuario_dashboard:
+    path:     /dashboard
+    defaults: { _controller: "AVBundle:Usuario:mostrarDashboard" }
+usuario_buscar:
+    path: /buscar
+    defaults: { _controller: "AVBundle:Usuario:BuscarUsuarioAjax" }
+usuario_perfil:
+    path:     /{id}/MiPerfil
+    defaults: { _controller: "AVBundle:Usuario:perfil" }

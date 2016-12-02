@@ -1,0 +1,30 @@
+retopregunta:
+    path:     /
+    defaults: { _controller: "AVBundle:RetoPregunta:index" }
+
+retopregunta_show:
+    path:     /{id}/show
+    defaults: { _controller: "AVBundle:RetoPregunta:show" }
+
+retopregunta_new:
+    path:     /new
+    defaults: { _controller: "AVBundle:RetoPregunta:new" }
+
+retopregunta_create:
+    path:     /create
+    defaults: { _controller: "AVBundle:RetoPregunta:create" }
+    methods:  POST
+
+retopregunta_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "AVBundle:RetoPregunta:edit" }
+
+retopregunta_update:
+    path:     /{id}/update
+    defaults: { _controller: "AVBundle:RetoPregunta:update" }
+    methods:  [POST, PUT]
+
+retopregunta_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "AVBundle:RetoPregunta:delete" }
+    methods:  [POST, DELETE]

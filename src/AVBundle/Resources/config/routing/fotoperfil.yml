@@ -1,0 +1,30 @@
+fotoperfil:
+    path:     /
+    defaults: { _controller: "AVBundle:FotoPerfil:index" }
+
+fotoperfil_show:
+    path:     /{id}/show
+    defaults: { _controller: "AVBundle:FotoPerfil:show" }
+
+fotoperfil_new:
+    path:     /new
+    defaults: { _controller: "AVBundle:FotoPerfil:new" }
+
+fotoperfil_create:
+    path:     /create
+    defaults: { _controller: "AVBundle:FotoPerfil:create" }
+    methods:  POST
+
+fotoperfil_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "AVBundle:FotoPerfil:edit" }
+
+fotoperfil_update:
+    path:     /{id}/update
+    defaults: { _controller: "AVBundle:FotoPerfil:update" }
+    methods:  [POST, PUT]
+
+fotoperfil_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "AVBundle:FotoPerfil:delete" }
+    methods:  [POST, DELETE]

@@ -1,0 +1,37 @@
+grupo:
+    path:     /
+    defaults: { _controller: "AVBundle:Grupo:index" }
+
+grupo_show:
+    path:     /{id}/show
+    defaults: { _controller: "AVBundle:Grupo:show" }
+
+grupo_buscar:
+    path:     /{nombre}/buscar
+    defaults: { _controller: "AVBundle:Grupo:buscar" }
+
+grupo_new:
+    path:     /new
+    defaults: { _controller: "AVBundle:Grupo:new" }
+
+grupo_create:
+    path:     /create
+    defaults: { _controller: "AVBundle:Grupo:create" }
+    methods:  POST
+
+grupo_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "AVBundle:Grupo:edit" }
+
+grupo_update:
+    path:     /{id}/update
+    defaults: { _controller: "AVBundle:Grupo:update" }
+    methods:  [POST, PUT]
+
+grupo_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "AVBundle:Grupo:delete" }
+    methods:  [POST, DELETE]
+grupo_sala:
+    path:     /{nombreGrupo}/sala
+    defaults: { _controller: "AVBundle:Grupo:mostrarSala" }

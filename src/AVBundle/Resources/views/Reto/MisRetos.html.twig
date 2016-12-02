@@ -1,0 +1,579 @@
+{% extends 'AVBundle::layoutPrinci.html.twig' %}
+
+
+{% import "AVBundle:Usuario:usuarioMacros.html.twig" as usuarioMacros %}
+
+{% block content_header %}
+  
+
+{% endblock %}
+
+{% block content %}
+
+
+	
+<script>
+	var preguntas2= {};
+</script>
+
+<div id="retoRepuestaForm" style="display:none">
+	{{ form(ProtoFormRespuestaReto) }}
+</div>
+
+
+<div class="nuevoRetoC" style="display:none">
+<div class="col-md-10">
+	<div class="panel panel-default">
+		<div class="panel-body">
+		 	{{ usuarioMacros.formNuevoReto(FormNuevoReto,grupo) }}
+		</div>
+	</div>
+	
+</div>
+	
+	
+</div>
+
+{% macro ProtoPregVoF(idpregunta) %}
+	{# Marque la opción correcta de la pregunta. #}
+
+	<div class="preguntaOpciones" data-id-pregunta="{{idpregunta}}">
+			
+			<input class="opcionCorrecta2"  type="radio"  data-preg-correcta="{{idpregunta}}" name="preg_{{idpregunta}}"  value="V" >
+			Verdadero
+			<input class="opcionCorrecta2"  type="radio" data-preg-correcta="{{idpregunta}}" name="preg_{{idpregunta}}"  value="F" >
+			Falso
+					
+	</div>
+
+{% endmacro %}
+		
+{% macro vof(idpreg) %}
+	<div class="preguntaOpciones" >
+		
+		<input data-parsley-required-message="Debes marcar una opción " class="opcionCorrecta2"  type="radio" required="required"  data-preg-correcta="{{idpreg}}" name="preg_{{idpreg}}"  value="V" >
+		Verdadero
+		<input data-parsley-required-message="Debes marcar una opción " class="opcionCorrecta2" required="required" type="radio" data-preg-correcta="{{idpreg}}" name="preg_{{idpreg}}"  value="F" >
+		Falso
+				
+	</div>
+{% endmacro %}
+{% macro seleccionSimple(idpreg,opciones) %}
+	<div class="input-group">
+	{% for key,val in opciones %}
+
+			<div> 
+
+				<span>
+					<input class="opcionCorrecta2" required="required" data-parsley-required-message="Debes marcar una opción " name="preg_{{idpreg}}" type="radio" data-preg-correcta="{{idpreg}}"  value="{{key}}" >
+					{{val}}
+				</span>
+				
+
+			</div>
+			
+
+
+	 {% endfor %}
+		</div>
+{% endmacro %}
+
+{% macro retoDePersona(reto) %}
+	<div class="info-box bg-yellow">
+    <span class="info-box-icon"><i class="ion ion-ios-pricetag-outline"></i></span>
+    <div class="info-box-content">
+      <span class="info-box-text">{{ reto.RetoObj.nombre  }} </span>
+      <span class="info-box-number">5,200</span>
+      <div class="progress">
+        <div class="progress-bar" style="width: 50%"></div>
+      </div>
+      <span class="progress-description">
+       	Retador <b>Eduardo Carvallo</b>
+      </span>
+    </div><!-- /.info-box-content -->
+  </div>
+	<form class="retoDePForm" action="">
+
+		<div class="containerRetoDePersonas" data-id-reto= {{ reto.RetoObj.id }}>
+			 <div class="box box-default collapsed-box box-solid">
+                <div class="box-header with-border">
+                  <h3 class="box-title"> {{ reto.RetoObj.nombre  }} 
+
+
+
+                  </h3>
+                  
+                  <div class="box-tools pull-right">
+	                  	<span style="margin-right:50px">
+	                  		Reto hecho por: 
+	                  				{{ reto.RetoObj.retador.nombre  }}
+	                  			   {{ reto.RetoObj.retador.apellido }}
+	                  	</span>
+                  				
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                  </div><!-- /.box-tools -->
+                </div><!-- /.box-header -->
+                <div  class="box-body">
+                 	<h4>Contesta las preguntas del reto.</h4>
+                 	<br>
+					{% for p in reto.preguntas %}
+											 
+								<script>
+									preguntas[{{p.preguntaObj.id}}]= null;
+								</script>
+
+								<h5><b> {{ p.preguntaObj.pregunta }} </b>   </h5>
+
+								
+								{% if p.respuesta["tipo"] == "vof" %}
+									
+									{{ _self.vof(p.preguntaObj.id) }}
+										
+								{% else %}
+
+									{{ _self.seleccionSimple(p.preguntaObj.id, p.respuesta["SMopciones"] ) }}
+
+								{% endif %}
+								<br>
+						{% endfor %}
+			
+					<center>
+						<button class="btn btn-success contestarReto">Enviar mi respuesta </button>
+					</center>
+               	 </div><!-- /.box-body -->
+              </div>
+				
+		</div>
+
+	</form>
+		
+
+{% endmacro %}
+{% block left_menu %}
+
+{% set contexto = "misretos" %}
+
+   {{ usuarioMacros.MenuUsuarioView(contexto,grupo) }}
+{% endblock %}
+
+	
+
+
+
+
+
+ <div class="row RetosContainerRow">
+
+ 	<div class="col-md-6">
+ 		
+ 		<h3> Tus retos </h3>
+ 		<button type="button" class="NuevoRetoBtn btn btn-default pull-right"><i class="fa fa-plus"></i> Nuevo reto</button>
+		<br>
+		{% for retoA in app.user.retosApersonas %}
+
+			{% if retoA.idgrupo == grupo.id  %}
+				{{ retoA.nombre }}
+
+			{% endif %}
+		{% endfor %}
+
+ 	</div>
+ 	<div class="col-md-6">
+ 		<h3> Retos de tus compañeros </h3>
+		<br>
+ 		{% for reto in misRetosDePersonas %}
+				{% if reto.RetoObj.idgrupo == grupo.id  %}
+					{{_self.retoDePersona(reto) }}
+				{% endif %}
+		{% endfor %}
+
+
+ 	</div>
+
+ </div>
+
+
+
+
+	
+
+{% endblock %}
+
+
+
+
+
+{% block javascripts %}
+	{{ parent() }}
+
+	<script>
+
+		$(function () {
+					$("#avbundle_reto_idgrupo").find("option[value="+ {{ grupo.id }} +"]").attr("selected",true);
+		});
+		function init_contadorTa(idtextarea, idcontador,max){
+			$("#"+idtextarea).keyup(function()
+			{
+			updateContadorTa(idtextarea, idcontador,max);
+			});
+			 
+			$("#"+idtextarea).change(function()
+			{
+			updateContadorTa(idtextarea, idcontador,max);
+			});
+		 
+		}
+ 
+		function updateContadorTa(idtextarea, idcontador,max){
+			var contador = $("#"+idcontador);
+			var ta =     $("#"+idtextarea);
+			contador.html("0/"+max);
+			 
+			contador.html(ta.val().length+"/"+max);
+			if(parseInt(ta.val().length)>max){
+				ta.val(ta.val().substring(0,max-1));
+				contador.html(max+"/"+max);
+			}
+		 
+		}
+		init_contadorTa("taComentario","contadorTaComentario", 14);
+	</script>
+	<script>
+		 var preguntas= {};
+    	var preguntasContainer;
+	    $(preguntasContainer).data(
+	          'index', $(preguntasContainer).find(':input').length
+	                    );
+
+	    var FormNuevoRetoSelector=$(".RetoForm");
+
+	    $(".NuevoRetoBtn").on('click', function (e) {
+	        e.preventDefault();
+  
+
+	       preguntasContainer= $(".preguntasContainer")
+	        agregarPregunta(preguntasContainer);
+	       
+	       FormNuevoRetoSelector=  $(".RetoForm");
+	       FormNuevoRetoSelector.parsley();
+
+	       $(".nuevoRetoC").fadeIn();
+	       $(".RetosContainerRow").fadeOut();
+	    }); 
+
+	     $(".nombreRetoField").livequery(function(){
+	        $(this).on('keydown', function () {
+
+	              var cant= $(this).val().length;
+
+	              if(cant  < 10 ){
+
+	                  
+	              } 
+	        });
+	     })
+	     $(".tipoPreg").livequery(function(){
+	      $(this).on('change', function () {
+	        var preguntaContainer= $(this).parents(".preguntaContainer");
+	        var opcionesCont= preguntaContainer.find(".opcionesContainer");
+
+	        var tipoPregunta= $(this).val();
+	        var label="";
+	        if(tipoPregunta == "" ){
+	          opcionesCont.empty();
+	          return;
+	        }
+
+	        if(tipoPregunta == "vof" ){
+
+	          opcionesCont.html("{{ usuarioMacros.ProtoPregVoF(1)|e('js') }}");
+	          label="<label for='opcionesContainer'>Selecciona la opción correcta</label>";
+	        }else{
+	           opcionesCont.html("{{ usuarioMacros.ProtoPregSelecMultiple(1)|e('js') }}");
+	           label="<label for='opcionesContainer'>Rellena y selecciona la opción correcta</label>";
+	        }
+	          opcionesCont.prepend(label);
+	        var idPreg=preguntaContainer.attr("data-id-pregunta");
+	        preguntas[idPreg].tipo= tipoPregunta;
+	        console.log(preguntas);
+
+	        var StringJsonRespuesta= JSON.stringify(preguntas[idPreg]);
+	        preguntaContainer.find(".respuestaPreg").val(StringJsonRespuesta);
+
+	      });
+	    })
+	    $(".opcionCorrecta").livequery(function(){
+	      $(this).on('change', function () {
+
+	        var preguntaContainer= $(this).parents(".preguntaContainer");
+	        var idPreg=preguntaContainer.attr("data-id-pregunta");
+	        preguntas[idPreg].opcionCorrecta= $(this).val();
+
+	        var StringJsonRespuesta= JSON.stringify(preguntas[idPreg]);               
+	        preguntaContainer.find(".respuestaPreg").val(StringJsonRespuesta);
+	      });
+	    })
+
+	    $(".SMopcionField").livequery(function(){
+	      $(this).on('keyup', function () {
+	        
+	        var preguntaContainer= $(this).parents(".preguntaContainer");
+	        var idPreg=preguntaContainer.attr("data-id-pregunta");
+
+	        //que letra, numero, es la opcion
+	        var orden= $(this).attr("data-orden");
+	        var valorOpcion=  $(this).val();
+
+	        preguntas[idPreg].SMopciones[orden]= valorOpcion;
+
+	        var StringJsonRespuesta= JSON.stringify(preguntas[idPreg]);               
+	        preguntaContainer.find(".respuestaPreg").val(StringJsonRespuesta);
+	      });
+	    })
+
+	    function agregarPregunta($collectionHolder) {
+
+	        var prototype = $collectionHolder.data('prototype');
+	        var index = $collectionHolder.data('index');
+
+	        var newForm ="<div class='preguntaContainer' data-id-pregunta='"+index+"'>"+prototype.replace(/__name__/g, index) +"</div>";
+
+	        preguntas[index]={"tipo": null, "opcionCorrecta": null, "SMopciones": {} }
+
+	        $collectionHolder.data('index', index + 1);
+
+	        $collectionHolder.append(newForm)
+
+	        $(newForm).find(".preguntaContainer").attr("data-id-pregunta", index);
+
+
+
+	    }
+
+	    $("body").on('click', ".agregarPreguntaRetoBtn", function (e) {
+	      e.preventDefault();
+	      
+	      agregarPregunta(preguntasContainer);
+	      //console.log(preguntas);
+	    });
+	    $("body").on("click",".deletePreg", function(){
+
+	        var idPregunta= $(this)
+	                .parents(".preguntaContainer")
+	                .attr("data-id-pregunta");
+	                
+	        delete preguntas[idPregunta];
+	                
+	        $(this).parents('.preguntaContainer').remove();
+	        console.log(preguntas);
+
+	    });
+
+	 
+	    $('body').on('click', ".next", function () {
+	      var current = $(this).data('currentBlock'),
+	        next = $(this).data('nextBlock');
+	        
+	      if (next > current)
+	        if (false === FormNuevoRetoSelector
+	                .parsley()
+	                .validate('block' + current))
+	          return;
+
+	       // data-submit indica si el boton es para envio del formulario
+	       
+	          $('.block' + current)
+	            .removeClass('show')
+	            .addClass('hidden');
+
+	          $('.block' + next)
+	            .removeClass('hidden')
+	            .addClass('show');
+
+	    });
+
+
+
+		
+		$(".box").livequery(function(){
+			// $(this).removeClass(".collapsed-box");
+			// $(this).find(".box-body").hide();
+		});
+		$(".retoDePForm").livequery(function(){
+
+			$(this).parsley();
+		});
+		$(".opcionCorrecta2").livequery(function(){
+			$(this).on('change', function () {
+
+				var idPreg=  $(this).attr("data-preg-correcta");
+				preguntas2[idPreg]=  $(this).val();
+
+				var StringJsonRespuesta= JSON.stringify(preguntas2);								
+				$("#avbundle_respuestareto_respuestaRetado").val(StringJsonRespuesta);
+				
+			});
+		});
+		$(".contestarReto").livequery(function(){
+
+			$(this).on('click', function (e) {
+				e.preventDefault();
+				 var form= $(this).parents(".retoDePForm");
+				  if (false === form.parsley().validate() ){
+				  	
+				  	return;
+				  }
+
+				var idReto= $(this).parents(".containerRetoDePersonas").attr("data-id-reto");
+				var protoFormRespReto= $("#retoRepuestaForm");
+				var entidadSelector= $(protoFormRespReto).find("#avbundle_respuestareto_idReto");
+				$(entidadSelector).find("option[value="+ idReto +"]").attr("selected",true);
+
+				protoFormRespReto.find("form").submit();
+				
+			});
+		});
+		function TogglecheckUsuario(idusuario,bool){
+			var usuarioOp=$(".retadores").find("option[value="+ idusuario +"]");
+			if(bool=="check"){
+				usuarioOp.attr("selected",true);
+			}else{
+				usuarioOp.removeAttr("selected");
+			}
+		}
+
+  // there's the gallery and the trash
+    var $gallery = $( "#gallery" ),
+    $trash = $( "#trash" );
+				    // let the gallery items be draggable
+		// image deletion function
+    var recycle_icon = "";
+      function deleteImage( $item ) {
+      	var usu= $item.attr("id").replace("Est_","");
+
+      	  TogglecheckUsuario(usu,"check");
+
+          $item.fadeOut(function() {
+          var $list = $( "ul", $trash ).length ?
+          $( "ul", $trash ) :
+          $( "<ul class='users-list clearfix gallery ui-helper-reset'/>" ).appendTo( $trash );
+
+          $item.find( "a.ui-icon-trash" ).remove();
+          $item.append( recycle_icon ).appendTo( $list ).fadeIn(function() {
+          $item
+          .animate({ width: "18%" })
+          .find( "img" ).addClass("ret")
+          .animate({ height: "18%" });
+          });
+        });
+      }
+    // image recycle function
+    var trash_icon = "";
+    function recycleImage( $item ) {
+    	var usu= $item.attr("id").replace("Est_","");
+    	 TogglecheckUsuario(usu,"ncheck");
+
+        $item.fadeOut(function() {
+        $item
+           .find( "a.ui-icon-refresh" )
+           .remove()
+            .end()
+          .css( "width",  "25%" )
+          .append( trash_icon )
+          .find( "img" ).removeClass("ret")
+          .css( "height",  "25%" )
+          .end()
+          .appendTo( $gallery )
+          .fadeIn();
+        });
+    }
+    // image preview function, demonstrating the ui.dialog used as a modal window
+    function viewLargerImage( $link ) {
+        var src = $link.attr( "href" ),
+        title = $link.siblings( "img" ).attr( "alt" ),
+        $modal = $( "img[src$='" + src + "']" );
+
+        if ( $modal.length ) {
+          $modal.dialog( "open" );
+        } else {
+          var img = $( "<img alt='" + title + "' width='384' height='288' style='display: none; padding: 8px;' />" ).attr( "src", src ).appendTo( "body" );
+
+            setTimeout(function() {
+                  img.dialog({
+                   title: title,
+                   width: 400,
+                   modal: true
+                   });
+             }, 1 );
+         }
+    }
+			
+			$("li", $gallery).livequery(function(){
+
+				$(this ).draggable({
+			        cancel: "a.ui-icon", // clicking an icon won't initiate dragging
+			        revert: "invalid", // when not dropped, the item will revert back to its initial position
+			        containment: "document",
+			        helper: "clone",
+			        cursor: "move"
+			    });
+
+			})	
+				  
+			$trash.livequery(function(){
+					// let the trash be droppable, accepting the gallery items
+				    $(this).droppable({
+				        accept: "#gallery > li",
+				        activeClass: "ui-state-highlight",
+				        drop: function( event, ui ) {
+
+				          deleteImage( ui.draggable );
+				        }
+				    });
+			});	   
+			$gallery.livequery(function(){	 
+				  // let the gallery be droppable as well, accepting items from the trash
+				    $(this).droppable({
+				        accept: "#trash li",
+				        activeClass: "custom-state-active",
+				        drop: function( event, ui ) {
+				         recycleImage( ui.draggable );
+				        }
+				    });
+
+			});   
+				  
+				
+				    // resolve the icons behavior with event delegation
+			$( "ul.gallery > li" ).livequery(function(){
+
+				    $( this ).click(function( event ) {
+				        var $item = $( this ),
+				        $target = $( event.target );
+				        if ( $target.is( "input.ui-icon-trash" ) ) {
+
+				           deleteImage( $item );
+
+				        } else if ( $target.is( "a.ui-icon-zoomin" ) ) {
+
+				           viewLargerImage( $target );
+
+				        } else if ( $target.is( "a.ui-icon-refresh" ) ) {
+
+				           recycleImage( $item );
+				        } else if($target.is( "li.ui-draggable > img" )){
+				        	if($target.hasClass("ret")){
+				        		recycleImage( $item );
+				        		
+				        	}else{
+				        		deleteImage( $item );
+				        	}
+				        }
+				        return false;
+				    });
+			})	    
+				
+			
+	</script>
+
+{% endblock %}

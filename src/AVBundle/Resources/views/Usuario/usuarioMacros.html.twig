@@ -1,0 +1,734 @@
+
+<style>
+	
+	.grupoBack{
+		background-color: #CEC7C7;
+	}
+	center{
+		margin-top: 10px;
+	}
+	.bg-aqua{
+		background-color: #E0DEDE;
+	}
+	.grupo-hightlight{
+		color: #027CDA;
+		font-size: 20px;
+	}
+	.pregunta_N{
+		width:30%; 
+		float:left;
+	}
+</style>
+{# {% macro EstudiantesGrupoView(grupo) %}
+	
+	<div class="box box-default">
+      <div class="box-header with-border">
+        <h3 class="box-title">Estudiantes de tu Grupo</h3>
+        <div class="box-tools pull-right">
+          
+  
+        </div>
+      </div>
+      <div style="min-height:300px" class="box-body no-padding">
+        <ul id="gallery" style="min-height:300px" class="gallery ui-helper-reset ui-helper-clearfix users-list clearfix">
+
+
+
+
+			{% for est in  grupo.Estudiantes %}
+
+				{% if est.idEstudiante.idTipousuario == "Estudiante" %}
+
+
+				 <li id="Est_{{est.idEstudiante.id}}" class="ui-widget-content ui-corner-tr">
+
+				      {% if est.idEstudiante.idFotoPerfil %}
+
+				        <img src="{{ asset('bundles/av/' ~  est.idEstudiante.idFotoPerfil ~ '') }}" class="img-circle" alt="Usuario Grupo Foto Perfil"/>
+
+				      {% else %}    
+
+				       <img src="{{ asset('bundles/av/Admin/dist/img/user2-160x160.jpg') }}" class="img-circle"    alt="User Image"/>
+				       
+				      {% endif %}
+
+				      <a data-toggle="tooltip" data-placement="right" title="{{est.idEstudiante.nombre}} {{est.idEstudiante.apellido}}" class="users-list-name" href="#">{{est.idEstudiante.nombre}} {{est.idEstudiante.apellido}}</a>
+           			  <span class="users-list-date">{{est.idEstudiante.login}}</span>
+				
+ 				</li>
+
+ 			{% endif %}
+		  {% endfor %}
+         
+            
+            
+            
+
+
+         
+          
+          
+        </ul>
+      </div>
+
+  </div>
+{% endmacro %} #}
+{# 
+{% macro VistaRetadores() %}
+	<div class="box box-default">
+		    <div class="box-header with-border">
+		      <h3 class="box-title">Usuarios a quien vas a retar</h3>
+		      <div class="box-tools pull-right">
+		       
+		      </div>
+		    </div>
+		    <div class="box-body no-padding" style="min-height:300px">
+
+		       <div style="min-height:300px" id="trash" class="ui-widget-content ui-state-default">
+		    
+		       </div>
+		      
+		         
+		      
+		    </div>
+  
+  	</div>
+  
+{% endmacro %} #}
+{% macro busUsuarioView() %}
+	<br>
+	<div class="box">
+                <div class="box-header">
+                  <h3 class="box-title">Resultado de la busqueda</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body no-padding">
+                  <table class=" table table-condensed">
+                    <tbody class="rsContent" >
+                    
+                   
+                   
+                  </tbody>
+              	</table>
+                </div><!-- /.box-body -->
+            </div>
+{% endmacro %}
+{% macro busqSimpleUsuarioForm(FormBuscarUsuario) %}
+
+{{ form_start(FormBuscarUsuario,{"attr":{"class":" formUsuarioBusq "}})}}
+
+{{ form_row(FormBuscarUsuario._token)}}
+ 	{{ form_row(FormBuscarUsuario.campoBuscarUsuario, {"label":false,"attr":{"placeholder":"Buscar por nombre","class":"form-control"}} ) }}
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
+				¿No tienes la cédula de un estudiante?
+				<br>
+			
+		</div>
+		<div class="panel-body">
+
+				 <div class="input-group input-group-sm">
+                   <input type="text" placeHolder="Introduce el nombre del estudiante" required="required"  class="FieldNombreEstBuscar form-control" >
+                    <span class="input-group-btn">
+                      <button  title="Buscar" class="buscarUsuarioBtn btn btn-default btn-flat" type="button"><i class="fa fa-search"></i></button>
+                    </span>
+                  </div>
+				
+				 	
+
+			     
+			     
+
+
+			<div class="rsBuscarEstudiante" style="display:none">
+					{{ _self.busUsuarioView() }}
+			</div>
+
+
+		</div>
+	</div>
+{{ form_end(FormBuscarUsuario) }}
+
+
+
+{% endmacro %}
+{% macro MenuUsuarioView(contexto,grupo) %}
+
+             <!-- Left side column. contains the logo and sidebar -->
+          <aside class="main-sidebar">
+
+            <!-- sidebar: style can be found in sidebar.less -->
+            <section class="sidebar">
+
+              <!-- Sidebar user panel (optional) -->
+              <div class="user-panel">
+                <div class="pull-left image">
+                  <img src="{{ asset('bundles/av/Admin/dist/img/user2-160x160.jpg') }}" class="img-circle" alt="User Image" />
+                </div>
+                <div class="pull-left info">
+                  <p>{{app.user.nombre}}</p>
+                  <!-- Status -->
+                  
+                   <a href="#"><i class="fa  fa-key text-success"></i> {{app.user.idTipousuario}}</a>
+                  
+                </div>
+              </div>
+
+              <!-- search form (Optional) -->
+          {#     <form action="#" method="get" class="sidebar-form">
+                <div class="input-group">
+                  <input type="text" name="q" class="form-control" placeholder="Search..."/>
+                  <span class="input-group-btn">
+                    <button type='submit' name='search' id='search-btn' class="btn btn-flat"><i class="fa fa-search"></i></button>
+                  </span>
+                </div>
+              </form> #}
+              <!-- /.search form -->
+              
+              <!-- Sidebar Menu -->
+              <ul class="sidebar-menu">
+                <li class="header">MENÚ</li>
+                <!-- Optionally, you can add icons to the links -->
+			 {%if contexto == "dashboard" %}
+  <li class="active" ><a href="{{path('usuario_dashboard')}}"><span>Inicio(Dashboard)</span></a></li>
+			 {%endif%}
+
+                {%if contexto == "sala" %}
+                <li ><a href="{{path('usuario_dashboard')}}"><span>Inicio(Dashboard)</span></a></li>
+				 <li class="active"><a href=""><span>Sala</span></a></li>
+			
+				{%endif%}
+				
+  			
+
+				{%if app.user.idtipousuario.id == 2%}
+
+          {%if contexto != "sala" %}
+                <li ><a href="" class="crearGrupoBtn"><i class=" fa fa-group" style="color: #3BB1FF;  "></i> <span>Crear un grupo </span></a></li>
+               
+           {%endif%} 
+                 <li class="treeview">
+                 <a class="buscarUsuario" href=""><i class="fa fa-user"></i> <span>Buscar Estudiante </span></a>
+                  <ul class="treeview-menu">
+                    <li class="busqSimple"> </li>
+                    <li><a href="#">Busqueda avanzada</a></li>
+                  </ul>
+                </li> 
+
+				{%endif%}
+				{%if contexto == "sala" %}
+				<li class="header">RECURSOS DEL GRUPO</li>
+				<li ><a href="" class="crearGrupoBtn"><i class=" fa fa-folder"></i> <span>Carpeta </span></a></li>
+				
+				{%endif%}
+              {# <form action="#" method="get" class="sidebar-form">
+                <div class="input-group">
+                  <input type="text" name="q" class="form-control" placeholder="Buscar..."/>
+                  <span class="input-group-btn">
+                    <button type='submit' name='search' id='search-btn' class="btn btn-flat"><i class="fa fa-search"></i></button>
+                  </span>
+                </div>
+              </form> #}
+             
+            {#     <li class="treeview">
+                  <a href="#"><span>Multilevel</span> <i class="fa fa-angle-left pull-right"></i></a>
+                  <ul class="treeview-menu">
+                    <li><a href="#">Link in level 2</a></li>
+                    <li><a href="#">Link in level 2</a></li>
+                  </ul>
+                </li> #}
+              </ul><!-- /.sidebar-menu -->
+            </section>
+            <!-- /.sidebar -->
+          </aside>
+           
+
+  
+{% endmacro %}
+{% macro grupoView(grupo,loop) %}
+
+  <div data-grupo-search="{{ grupo.idgrupo.nombre }}" data-materia-search="{{ grupo.idgrupo.materia }}" class="grupoView small-box bg-aqua grupoBack">
+	    <div class="inner">
+	      <h3>{{loop}}</h3>
+	      <p><b>{{ grupo.idgrupo }}</b></p>
+         {{ grupo.idGrupo.materia }}
+	    </div>
+	    <div class="icon">
+	      <i class="fa fa-group"></i>
+	    </div>
+	    <a href='{{ path("grupo_sala", {"nombreGrupo":  grupo.idgrupo.nombre } )}}' class="small-box-footer">Entrar<i class="fa fa-arrow-circle-right"></i></a>
+   </div>
+{% endmacro %}
+
+{% macro editGrupoForm(formEditarGrupo) %}
+
+	<div class="input-group">
+		{{ form_start(formEditarGrupo) }}	
+		{{ form_row(formEditarGrupo._token) }}
+		{{ form_row(formEditarGrupo.nombre, {"label":false, "attr":{"class":"nombreGrupoField hidden"}}) }}
+		{{ form_row(formEditarGrupo.EstudiantesField, {"attr": {"class":"estField hidden"}}) }}
+		<input  class="tagsinput " data-contexto="grupo"  type="text"  placeholder="Inserte una cedula"  />
+		<button type="button" class="EditGrupoSubmit btn btn-default btn-sm">Enviar</button>
+	</div>
+
+	
+{% endmacro %}
+{% macro modal(id) %}
+
+    <div id="{{id}}" class="modal fade ">
+        <div  class="modal-dialog modal-lg " role="dialog" data-keyboard="false" data-backdrop="static">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> &times; </button>
+                    <h4 class="modal-title">
+                      
+                    </h4>
+                </div>
+                <div class="modal-body" style="overflow-x:auto">
+                </div>
+                <div class="modal-footer">
+                	<button class="btn btn-danger confirm ">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+{% endmacro %}
+{% macro FormNuevoGrupo(id,nuevoGrupoForm,FormBuscarUsuario) %}
+
+	<form  id="{{ id }}" action="{{ path('grupo_create') }}" method="POST"  >
+
+			<div class="first block1 show">
+				<h4> <b> Paso 1) </b> (Asigna el nombre del grupo y la materia en que pertenece) </h4>
+				<br>
+				{{ form_row(nuevoGrupoForm._token) }}
+				
+				<span   style="display:inline-block"><span style="color:red">* </span><span> 5-10 caracteres  </span></span>
+				{{ 
+					form_row(nuevoGrupoForm.nombre,
+						{
+							'attr':
+								{
+									'class':'nombreNgrupo form-control', 
+									'placeHolder': 'Escriba nombre del grupo',
+									'required': 'required', 
+									'data-parsley-group': "block1",
+									"data-parsley-length": "[5,15]",
+									"data-parsley-length-message":"El nombre debe contener entre 5 y 15 caracteres",
+									'data-parsley-required-message':"Debes asignar un nombre a tu grupo"
+								 }
+						}
+					) 
+				}}
+				<span id="materiaStatus" class="status"> 
+					
+				</span>
+
+				<span  style="display:inline-block"><span style="color:red">* </span><span> Requerido  </span></span>
+				{{ form_row(nuevoGrupoForm.materia,
+							{
+								'attr':
+									{
+										'class':'form-control', 
+										'required': 'required', 
+										'data-parsley-group': "block1",
+										'data-parsley-required-message':"Elige la materia"
+									 }
+						    }
+						   )
+				}}
+
+				{{ form_row(nuevoGrupoForm.idprofesor, {label:false,"attr": {"class": "hidden"} }) }}
+				{{ form_row(nuevoGrupoForm.recursos) }}
+
+				<sp
+
+				 <span class="next btn btn-success pull-right" data-current-block="1" data-next-block="2">Siguiente ></span>	
+			</div>
+			<div id="w_{{ id }}" class="infoEditarGrupo second block2 hidden">
+				
+  <div class="row">
+				<div class="col-md-7">	
+					<h4> <b> Paso 2) </b> Inserte Estudiantes al nuevo grupo</h4>
+					<br>
+          <span>No es necesario que te incluyas en el grupo.</span>
+          <br>
+          <span>Debes insertar al menos 1 estudiante.</span>
+        
+          <input id="estudiantesInputTags" style="height:80px" data-id-formulario="{{ id }}" class="tagsinput" name="estudiantesInput" type="text"  data-role="tagsinput" placeholder="Inserte una cedula" data-contexto="grupo" data-parsley-group= "block2" data-parsley-required-message="Debe insertar al menos 1 estudiante" required />
+          
+          {{ form_row( nuevoGrupoForm.EstudiantesField, {"attr":{"class": "estField hidden"}}) }} 
+
+            <center> 
+				
+					
+				 <button  data-current-block="2" data-next-block="3" type="button" data-submit="submit" class="next btn btn-success "  > <i class="fa fa-group"></i>  Crear Grupo </button> </center>
+				</div>
+</form>
+				<div class="col-md-5">	
+
+					<div class="wrapperB">
+
+						{{_self.busqSimpleUsuarioForm(FormBuscarUsuario) }}
+						
+					</div>
+				
+
+				</div>
+        </div>
+        <br>
+					<span class="prev btn btn-success pull-left" data-current-block="2" data-next-block="3"> < Regresar </span>	
+			</div>
+			<div class="third block3 hidden">
+					
+			</div>
+			
+			
+	
+
+
+
+
+{% endmacro %}
+
+{% macro datatableGrupo(grupo) %}
+<div data-nombre-grupo="{{grupo.nombre}}" data-id-grupo="{{ grupo.id }}"  class="grupoContainer">
+
+<div class="panel panel-default">
+	<div class="panel-body">
+		 <h3>{{ grupo.nombre }}</h3>
+		 <div class="EditarGrupoContainer" >
+
+			<button data-editgrupo-wrapper="#w_{{ grupo.id }}"  class="AgregarEstBtn btn btn-info btn-sm"> Agregar estudiantes </button>
+		 	
+		 	<div id="w_{{ grupo.id }}"  class="infoEditarGrupo formularioEditarWrapper" style="display:none">
+		 		
+
+		 	</div>
+			
+		 </div>
+
+		 <table  class="datatableGrupo table table-striped table-bordered datatable" cellspacing="0" width="100%">
+		        <thead>
+		            <th>Cedula</th>
+		            <th> Nombre</th>
+		            <th> Apellido </th>
+		            <th>Acción </th>
+		        </thead>
+		        
+		 
+		        <tbody>
+
+		        	{% for estudiante in grupo.Estudiantes %}
+		        		{% if estudiante.idEstudiante.id != app.user.id %}
+				        	<tr id="{{ estudiante.id }}">
+				        		<td>{{estudiante.idEstudiante.cedula}}</td>
+				        		<td>{{estudiante.idEstudiante.nombre }}</td>
+				        		<td>{{estudiante.idEstudiante.apellido }}</td>
+				        		<td>
+				        			<button class="ElimEstBtn btn btn-app paddingbtn1"><i class="fa fa-edit"></i> Eliminar</button>
+				        		</td>
+				        	</tr>
+				         {% endif %}
+			        {% endfor %}
+
+		        </tbody>
+		 </table>
+		</div>
+	</div>
+	 	
+</div>
+	
+
+	
+{% endmacro %}
+
+{% macro datatableUsuarios(usuarios) %}
+
+<div class="usuariosContainer">
+
+<div class="panel panel-default">
+	<div class="panel-body">
+		 <h3>Lista de usuarios</h3>
+
+
+		 <table  class="datatableGrupo table table-striped table-bordered datatable" cellspacing="0" width="100%">
+		        <thead>
+		           
+		                <th>Login</th>
+		                <th>Clave</th>
+		                <th>Nombre</th>
+		                <th>Apellido</th>
+		                <th>Cedula</th>
+		                <th>Email</th>
+		                <th>Tlf</th>
+		                <th>Acciones</th>
+
+		        </thead>
+		 
+		        <tbody>
+
+		        	{% for usuario in usuarios %}
+			        	<tr id="{{ usuario.id }}">
+			        			<td>{{ usuario.login }}</td>
+				                <td>{{ usuario.clave }}</td>
+				                <td>{{ usuario.nombre }}</td>
+				                <td>{{ usuario.apellido }}</td>
+				                <td>{{ usuario.cedula }}</td>
+				                <td>{{ usuario.email }}</td>
+				                <td>{{ usuario.tlf }}</td>
+				                <td>
+				                
+					                <ul>
+					                    <li>
+					                        <a href="{{ path('usuario_show', { 'id': usuario.id }) }}">show</a>
+					                    </li>
+					                    <li>
+					                        <a href="{{ path('usuario_edit', { 'id': usuario.id }) }}">edit</a>
+					                    </li>
+					                </ul>
+				                	
+				                </td>
+			        	</tr>
+			        {% endfor %}
+
+		        </tbody>
+		 </table>
+		</div>
+	</div>
+	 	
+</div>
+	
+
+	
+{% endmacro %}
+
+
+{% macro FormCrearUsuario(form) %}
+		
+		{{form_start(form)}}
+		{{form_row(form._token)}}
+		{{form_row(form.nombre, {"attr": {"class":"form-control"}})}}
+		{{form_row(form.apellido, {"attr": {"class":"form-control"}})}}
+		{{form_row(form.cedula, {"attr": {"class":"form-control"}})}}
+		{{form_row(form.login, {"attr": {"class":"form-control"}})}}
+		{{form_row(form.clave, {"attr": {"class":"form-control"}})}}
+		{{form_row(form.email, {"attr": {"class":"form-control"}})}}
+		{{form_row(form.tlf, {"attr": {"class":"form-control"}})}}
+		<button  class="btn btn-success center-block" type="submit">Enviar</button>
+		
+{% endmacro %}
+{# {% macro ProtoPregSelecMultiple(idpregunta) %}
+
+	<div class="preguntaOpciones" data-id-pregunta="{{idpregunta}}">
+		
+		{% for i  in 'a'|upper..'d'|upper %}
+
+			<div class="input-group">
+				<span class="input-group-addon">
+				<input class="opcionCorrecta" required="required" name="preg_{{idpregunta}}" type="radio" data-parsley-group= "block2"  data-preg-correcta="{{idpregunta}}"  value="{{i|lower}}" > </span>
+
+				<input type="text" data-parsley-group= "block2" data-orden="{{i|lower}}" placeHolder="Escriba la opción {{ i }}" name="" id="pregField_{{idpregunta}}" class="SMopcionField form-control" >
+				
+			</div>
+		{% endfor %}
+		
+
+	</div>
+
+{% endmacro %}
+{% macro ProtoPregVoF(idpregunta) %}
+	
+
+	<div class="preguntaOpciones" data-id-pregunta="{{idpregunta}}">
+			<center>
+			<input class="opcionCorrecta"   checked="checked" type="radio" required="required" data-preg-correcta="{{idpregunta}}"  data-parsley-group= "block2"  name="preg_{{idpregunta}}"  value="V" >
+			Verdadero
+			<input class="opcionCorrecta" data-parsley-group= "block2" required="required"  type="radio" data-preg-correcta="{{idpregunta}}" name="preg_{{idpregunta}}"  value="F" >
+			Falso
+				</center>	
+	</div>
+
+{% endmacro %} #}
+{# {% macro retoPregunta(FormPregunta) %}
+
+
+		
+		
+	
+			<div class=" box box-default box-solid " style="width:80%; float:left; margin-right:2%" >
+                <div class="box-header with-border">
+                  <h3 class="box-title">Pregunta</h3>
+                  <div class="box-tools pull-right">
+               
+                  	<button type="button" class=" deletePreg btn btn-box-tool"><i class="fa fa-close"></i></button>
+                  </div>
+                </div>
+                <div style="display: block;" class="box-body">
+                  
+
+						{{ form_row(FormPregunta.tipo,{label:"Selecciona el estilo de pregunta", "attr":{
+							"class":"tipoPreg form-control",
+							"data-parsley-group": "block2",
+							"data-parsley-required-message": "Elige un estilo de pregunta",
+
+
+						}}) }}
+						{{ form_row(FormPregunta.pregunta,{label:"Escribe la pregunta", "attr":
+							{
+								"class":"form-control",
+								"data-parsley-group": "block2",
+								"data-parsley-required-message": "Es importante escribir la pregunta.",
+						}} ) }}
+						
+						{{ form_row(FormPregunta.respuestaReal,{label:false, "attr":
+						{
+							"class":"respuestaPreg hidden",
+							"data-parsley-group": "block2",
+							"data-parsley-required-message": "Elige un estilo de pregunta",
+
+						}
+
+						}) }}
+						
+					
+						<div class="opcionesContainer">
+							
+						</div>
+
+                </div>
+              </div>
+
+
+{% endmacro %} #}
+{# {% macro formNuevoReto(reto,grupo) %}
+
+<form  class="RetoForm" action="{{ path('reto_create') }}" method="POST"  >
+
+{{ form_row(reto._token ) }}
+
+<div class="first block1 show">
+	
+  	<b>Paso 1</b> Asignale un nombre a tu reto
+
+  	<br>
+  	<br>
+  	<span style="color:red ">*</span> Max 20 caracteres
+  	<br>
+  	{{ form_row(reto.nombre, {label:false, "attr":{
+  				"class":"nombreRetoField form-control",
+  				"data-parsley-group": "block1",
+  				"data-parsley-required-message": "Asignale un nombre al reto",
+  				"data-parsley-length":"[5, 20]",
+  				"data-parsley-length-message": "El nombre debe contener entr 5 y 20 caracteres",
+
+  			}
+  		} 
+  		)
+  	}}
+  	{{ 
+			form_row(reto.idgrupo, {label:false, "attr":
+				{"class":"hidden", 
+				 
+				}
+				
+			})   
+		}}
+  	
+  	<span class="next btn btn-success pull-right" data-current-block="1" data-next-block="2">Siguiente ></span>	
+
+	
+</div>
+<div class="second block2 hidden">	
+
+		  	<b>Paso 2</b> Agrega las preguntas
+		  	<br>
+			<br>
+			<button type="button" class="btn btn-default">marcar todas VoF.</button>
+			<button type="button" class="btn btn-default">marcar todas Select Simple.</button>
+
+		  	<button type="button" class="agregarPreguntaRetoBtn btn btn-success">Agregar Pregunta</button>
+
+		
+			<br>
+			<br>
+
+			<div class="preguntasContainer center-block" style="overflow:auto" data-prototype="{{ _self.retoPregunta(reto.preguntas.vars.prototype)|e }}" >
+				
+					
+
+			</div>
+				<br>
+			 <span class="next btn btn-success pull-right" data-current-block="2" data-next-block="3">Siguiente ></span>	
+
+	
+</div>
+<div class="third block3 hidden">
+	
+		  	<b>Paso 3</b> Elige a quien(nes) quieres retar de tu grupo
+			<br>
+			<br>
+
+			{{ form_row(reto.retados, {label:false, "attr":
+				{"class":"hidden retadores", 
+				  "data-parsley-group": "block3",
+				 
+				}
+				
+			}  )   }}
+
+			<div class="row">
+
+				<span class="pull-left" style="margin:10px">
+					<span style="color:red"> * </span> Debes retar a al menos 1 estudiante de tu grupo.
+						<br>
+
+						<small><b>Haz click o arrastra la imagen hacia el contenedor de retadores</b> </small>
+						<br>
+					
+				</span>
+				<br>
+								<br>
+												<br>
+				<div class="col-md-6">
+					
+					{{ _self.EstudiantesGrupoView(grupo) }}
+					
+					
+				</div>
+				<div class="col-md-6">
+					{{ _self.VistaRetadores() }}
+				</div>
+			</div>
+
+		  	
+			
+		  	<button type="submit" class="next btn btn-success pull-right" data-current-block="3" data-next-block="4">Enviar reto ></button>
+			
+
+	
+</div>
+<div class="fourth block4 hidden">
+	
+
+		  	<div class="alert alert-success">
+		  		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		  		<strong>Tu reto ha sido creado exitosamente </strong> 
+		  		<br>
+				Has ganado 5 puntos
+		  		Tus compañeros ya recibieron tu reto.
+		  		(Recuerda que si contestan correctamente tu reto, recibiran puntos)
+		  	</div>
+			
+		
+		  
+
+</div>
+
+{{ form_row(reto.status, {"attr": { "maxlength":"50"}}) }}
+</form>
+
+
+{% endmacro %} #}
+
+

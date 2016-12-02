@@ -1,0 +1,49 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Reto list</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Status</th>
+                
+                <th>Fechacreacion</th>
+                <th>Fechacontestado</th>
+                <th>Puntos</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('reto_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.status }}</td>
+
+                <td>{% if entity.fechaCreacion %}{{ entity.fechaCreacion|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if entity.fechaContestado %}{{ entity.fechaContestado|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ entity.puntos }}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('reto_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('reto_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('reto_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}

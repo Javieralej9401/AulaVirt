@@ -1,0 +1,260 @@
+{% extends 'AVBundle::layoutPrinci.html.twig' %}
+
+
+
+
+{% block content_header %}
+  
+
+{% endblock %}
+
+{% block content %}
+
+
+<style>
+	
+	.next{
+		margin-top:10px;
+	}
+	.fa-check{
+		color: #14CF67;
+		font-size: 20px;
+	}
+	.glyphicon-remove{
+		color: #FA2828;
+		font-size: 20px;
+	}
+	.bootstrap-tagsinput input{
+		width: 30em !important;
+	}
+
+	.bg-aqua, .callout.callout-info, .alert-info, .label-info, .modal-info .modal-body {
+		  background-color: #C1B8B8 !important;
+	}
+</style>
+{# CONTENIDO  #}
+
+
+
+<div class="col-md-9">
+
+	
+	
+	
+
+	
+<div class="row">
+	
+	<input name="buscarGrupoInput" class="buscarGrupoInput form-control input-lg" style="margin:0" placeholder="Buscar un grupo " type="text">
+
+
+
+	<br>
+
+		<div class="gruposUsuarioContainer col-md-12 center-block">
+
+				 {% for grupo in app.user.GruposInscrito %}
+						<div class="col-md-4">
+							
+							{{ usuarioMacros.grupoView(grupo,loop.index) }}
+							
+						</div>
+
+
+				 {% endfor %}
+				 {% if app.user.GruposInscrito|length ==0 %}
+
+							<div class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+									{% if app.user.idtipousuario.id == 3 %}
+                    <h4><i class="icon fa fa-warning"></i><b> No estas inscrito en ningún  grupo</b></h4>
+                    No estas asociado a un grupo. Contacta a tus profesores.
+                 
+
+					
+                  {% else %}
+											{% if app.user.idtipousuario.id == 2 %}
+		                   <h4><i class="icon fa fa-warning"></i> No has creado un grupo</h4>
+		                    Crea tu primer grupo</br>
+		                    <small>Haz click en la opción Crear Grupo del menú principal</small>
+		                   {% endif %} 
+									{% endif %}
+                  
+                  </div>
+
+				 	{%endif%}
+		</div>
+
+</div>
+	{% if is_granted('ROLE_Profesor') %}
+  			
+		 {% for grupo in app.user.grupos %}
+
+			{{ usuarioMacros.datatableGrupo(grupo) }}
+
+		 {% endfor %}
+
+	{% endif %}	
+
+{# <div class="panel panel-default">
+		<div class="panel-body">
+		 		
+			 	{{ form_start(FormBuscarUsuario,{"attr":{"class":"formUsuarioBusq"}})}}
+			 	{{ form_row(FormBuscarUsuario._token)}}
+			 	{{ form_row(FormBuscarUsuario.campoBuscarUsuario, {"attr":{"class":"form-control"}} ) }}
+			 	<button  type="submit" class="buscarUsuarioBtn btn btn-default">Buscar</button>
+				
+				{{ form_end(FormBuscarUsuario) }}
+			
+
+
+		</div>
+		<div class="panel panel-default">
+			<div class="resultadoUsu panel-body">
+			   Basic panel example
+			</div>
+		</div>
+	</div> #}
+
+	{# {% if is_granted('ROLE_Administrador') %}
+  			
+			{{ usuarioMacros.datatableUsuarios(usuarios) }}
+			<div class="getionUsuarios">
+				
+				<div class="col-md-6">
+					{{ usuarioMacros.FormCrearUsuario(gestionarUsuarios.FormCrear ) }}
+				</div>
+
+			</div>
+	{% endif %}	 #}
+	
+	
+
+
+
+
+</div>
+
+{% block left_menu %}
+
+{% set contexto = "dashboard" %}
+
+	 {{ usuarioMacros.MenuUsuarioView(contexto) }}
+{% endblock %}
+
+<div class="col-md-3"  >
+	<div style="float:right">
+
+		{% if is_granted('ROLE_Profesor') %}
+
+			{# <button class="crearGrupoBtn btn btn-default btn-lg">Nuevo Grupo</button>  #}
+			
+		{% endif %}	
+
+	</div>	
+</div>
+
+{% endblock %}
+
+
+{% block javascripts %}
+
+	{{ parent() }}
+
+	<script>
+		var gruposUsuarioContainer=$(".gruposUsuarioContainer");
+
+		function buscarGrupoDash(input){
+			var grupos=  $(gruposUsuarioContainer).find(".grupoView");
+
+		
+			for (var i = 0; i < grupos.length; i++) {
+				var grupo= grupos[i];
+
+				var materia= $(grupo).attr("data-materia-search"); 
+				var nombreG= $(grupo).attr("data-grupo-search"); 
+
+				var busqueda=input;
+
+				if( materia.indexOf(busqueda) > -1 || nombreG.indexOf(busqueda) > -1){
+						$(grupo).parent().fadeIn();
+				}else{
+					$(grupo).parent().fadeOut();
+				}
+
+				
+				// if (materia.match(/^a.*$/) || materia.match(/^.*a$/)) { 
+
+				//     $(grupo).parent().fadeIn();
+
+				// }else{
+
+				// 	$(grupo).parent().fadeOut();
+				// }
+
+					
+
+			};			
+		}
+		$(".buscarGrupoInput").on('keydown', function () {
+				buscarGrupoDash( $(this).val() )
+		});
+
+		$(".buscarUsuario").on('click', function () {
+			$(".busqSimple").html("{{ usuarioMacros.busqSimpleUsuarioForm(FormBuscarUsuario)|e('js') }}")
+		});
+		
+	</script>
+}
+	{% if is_granted('ROLE_Profesor') %}
+
+			
+			
+		
+		<script>		
+		 
+
+			//Variables Globales de formularios y paths de twig usado en dadshboad.js
+			
+			var GlobalNuevoGrupoForm= "{{ usuarioMacros.FormNuevoGrupo('idg',nuevoGrupoForm,FormBuscarUsuario)| e('js') }}";
+			var GlobalEditarGrupoForm="{{ usuarioMacros.editGrupoForm(formEditarGrupo)|e('js') }}";
+			var GlobalBuscarGrupoEstudiantePath= '{{ path("grupoestudiante_buscar", { "cedula": "cedulainput" }) }}';
+			var GlobalBuscarEstudiantePath= 'ad';
+			var GlobalBuscarGrupoPath='{{ path("grupo_buscar", { "nombre": "nombreGrupo" }) }}';
+			var GlobalElimGrupoEstudianteForm= "{{ form(formEliminarGrEstudiantes)|e('js') }}";
+
+		</script>
+	
+
+		{% javascripts
+			'bundles/av/js/usuario/dashboard.js'
+			'bundles/av/js/globales.js'
+	
+		%}
+		<script src="{{ asset_url }}" ></script>
+
+		{% endjavascripts %}
+
+{% endif %}	
+		
+		
+	
+
+	<script>
+		
+		$(".datatable").livequery(function(){
+			
+			$(this).dataTable();
+
+		
+	});
+		
+		
+
+	</script>
+{% endblock %}
+
+
+
+
+
